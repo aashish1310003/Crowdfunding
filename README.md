@@ -1,17 +1,10 @@
+
 # College-Level Crowdfunding Portal
 
 ## Project Overview
 This project aims to create an online crowdfunding platform for academic institutions to support student and faculty-driven projects. It provides a secure and transparent way to manage campaigns, track donations, and engage potential backers.
 
 ---
-
-## Project detailed Presentation
-The Presentation of this project, summarizing its purpose, objectives, features and goals, is available below:
-
-- [Abstract (PDF)](https://docs.google.com/presentation/d/1SbJcNVY5JBi-R5y5AcQ2_47_n8NCdLSrDjWWs_d2InQ/edit?usp=sharing)
-
----
-
 
 ## Weekly Log
 The progress of this project is documented weekly. Click the link below to access the detailed log:
@@ -43,4 +36,5 @@ A Project Confirmation document can be accessed here:
 
 ---
 
+## Repository Structure
 
