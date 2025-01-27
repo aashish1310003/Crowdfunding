@@ -18,7 +18,9 @@ The progress of this project is documented weekly. Click the link below to acces
 
 - [Weekly Log - 1 (PDF)](docs/week1-log.pdf)
 
-- [Weekly Log - 2 (FLOW CHART)](docs/flow%20chart.jpg)
+- [Weekly Log - 1 individual contribution (PDF)](docs/week-1.pdf)
+
+- [Weekly Log - 2 (FLOW CHART)](docs/week-2.pdf)
 ---
 
 
