@@ -21,6 +21,8 @@ The progress of this project is documented weekly. Click the link below to acces
 - [Weekly Log - 1 individual contribution (PDF)](docs/week-1.pdf)
 
 - [Weekly Log - 2 (FLOW CHART)](docs/week-2.pdf)
+
+- [Weekly Log - 3 (FIGMA)](docs/week3-log.md)
 ---
 
 
