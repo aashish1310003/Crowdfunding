@@ -1,7 +1,6 @@
 package com.s8.Crowdfunding.repository;
 
 import com.s8.Crowdfunding.model.Project;
-import com.s8.Crowdfunding.model.Status;
 import com.s8.Crowdfunding.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

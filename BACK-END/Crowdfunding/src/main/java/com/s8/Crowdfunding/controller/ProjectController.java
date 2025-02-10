@@ -1,8 +1,11 @@
 package com.s8.Crowdfunding.controller;
 
+import com.s8.Crowdfunding.exceptions.AppealLimitExceededException;
+import com.s8.Crowdfunding.exceptions.ResourceNotFoundException;
 import com.s8.Crowdfunding.model.Project;
-import com.s8.Crowdfunding.model.Status;
 import com.s8.Crowdfunding.service.ProjectService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,5 +65,17 @@ public class ProjectController {
         List<Project> projects = projectService.getProjectsByGoalNotReached();
         return ResponseEntity.ok(projects);
     }
-}
 
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateProjectStatus(@PathVariable Long id, @RequestBody String status) {
+        try {
+            Project updatedProject = projectService.updateProjectStatusById(id, status);
+            return ResponseEntity.ok(updatedProject);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (AppealLimitExceededException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+}
