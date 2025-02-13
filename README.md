@@ -23,6 +23,8 @@ The progress of this project is documented weekly. Click the link below to acces
 - [Weekly Log - 2 (FLOW CHART)](docs/week-2.pdf)
 
 - [Weekly Log - 3 (FIGMA)](docs/week3-log.md)
+
+- [Weekly Log - 4 (WORKING ON FUNCTIONALITY)](docs/week4-log.md)
 ---
 
 
