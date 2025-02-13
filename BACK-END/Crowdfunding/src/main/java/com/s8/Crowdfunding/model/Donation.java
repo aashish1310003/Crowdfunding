@@ -20,7 +20,7 @@ public class Donation {
     private Double amount;
     private Date donationDate;
     private String donorVisibility;
-
+    private String status;
     @ManyToOne
     @JoinColumn(name = "userId")
     private User donor;
