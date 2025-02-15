@@ -1,8 +1,8 @@
 package com.s8.Crowdfunding.service;
 
+import com.s8.Crowdfunding.model.Users;
 import org.springframework.stereotype.Service;
 import com.s8.Crowdfunding.dto.UserRequest;
-import com.s8.Crowdfunding.model.User;
 import com.s8.Crowdfunding.repository.UserRepository;
 
 import java.time.Year;
@@ -18,9 +18,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User createUser(UserRequest userDto) {
+    public Users createUser(UserRequest userDto) {
         ModelMapper mapper = new ModelMapper();
-        User user = mapper.map(userDto, User.class);
+        Users user = mapper.map(userDto, Users.class);
 
         int passOut = Integer.parseInt(userDto.getEmail()
                 .chars()

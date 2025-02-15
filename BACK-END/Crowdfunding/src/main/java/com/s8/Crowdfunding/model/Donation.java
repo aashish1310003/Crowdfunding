@@ -23,7 +23,7 @@ public class Donation {
     private String status;
     @ManyToOne
     @JoinColumn(name = "userId")
-    private User donor;
+    private Users donor;
 
     @ManyToOne
     @JoinColumn(name = "projectId")

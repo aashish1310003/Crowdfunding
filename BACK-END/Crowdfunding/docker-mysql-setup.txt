@@ -1,0 +1,49 @@
+# 1️⃣ Create a Docker Compose file (`docker-compose.yml`) in the root of your project:
+
+docker-compose.yml:
+------------------------
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: crowdfunding-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE:Crowdfunding
+      MYSQL_USER:root
+      MYSQL_PASSWORD:Asdfg12345@
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+------------------------
+
+# 2️⃣ Create a .env file to store environment variables (optional):
+
+.env:
+------------------------
+MYSQL_ROOT_PASSWORD=root
+MYSQL_DATABASE=Crowdfunding
+MYSQL_USER=root
+MYSQL_PASSWORD=Asdfg12345@
+------------------------
+
+# 3️⃣ Start MySQL container:
+
+docker-compose up -d
+
+# 4️⃣ Check running containers:
+
+docker ps
+
+# 5️⃣ Connect to MySQL container:
+
+docker exec -it crowdfunding-mysql mysql -u root -p
+
+# 6️⃣ Stop MySQL container:
+
+docker-compose down

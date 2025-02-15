@@ -1,7 +1,7 @@
 package com.s8.Crowdfunding.repository;
 
 import com.s8.Crowdfunding.model.Project;
-import com.s8.Crowdfunding.model.User;
+import com.s8.Crowdfunding.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<Users, Integer> {
     @Query("SELECT p FROM Project p WHERE p.status = :status AND p.user.userId = :userId")
     List<Project> findUserByUserIdAndStatus(@Param("status") String status, @Param("userId") Long userId);
 

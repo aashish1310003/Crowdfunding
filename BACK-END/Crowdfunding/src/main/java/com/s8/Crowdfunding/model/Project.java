@@ -30,7 +30,7 @@ public class Project {
 
     @ManyToOne
     @JoinColumn(name = "userId")
-    private User user;
+    private Users user;
 
     @JsonIgnore
     @OneToMany(mappedBy = "project")
