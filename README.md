@@ -30,6 +30,8 @@ The progress of this project is documented weekly. Click the link below to acces
 
 - [Weekly Log - 5 WORKING ON FRONTEND)](docs/week5)
 
+- [Weekly Log - 6 WORKING ON BACKEND)](docs/week6-log.md)
+
 ---
 
 ## Abstract
