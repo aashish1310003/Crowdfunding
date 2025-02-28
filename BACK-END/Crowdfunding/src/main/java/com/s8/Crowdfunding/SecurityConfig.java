@@ -35,6 +35,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable()) // Disable CSRF
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session
                 .authorizeHttpRequests(auth -> auth
@@ -43,6 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll() // Allow public access to auth endpoints
                         .anyRequest().authenticated() // Secure all other endpoints
                 )
+
                 .addFilterBefore(new JwtTokenFilter(jwtService, userDetailsService), UsernamePasswordAuthenticationFilter.class); // Add JWT filter
 
         return http.build();
@@ -63,16 +65,19 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // ✅ Allow all origins (change for security)
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
+
+        configuration.setAllowedOriginPatterns(List.of("*")); // ✅ Allow all origins
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // ✅ Allow all methods
+        configuration.setAllowedHeaders(List.of("*")); // ✅ Allow all headers
         configuration.setAllowCredentials(true); // ✅ Allow credentials (JWT tokens, cookies)
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 }
