@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<Users, Long> {
@@ -22,4 +23,6 @@ public interface UserRepository extends JpaRepository<Users, Long> {
         @Query("SELECT p FROM Project p WHERE p.status = :status AND p.user.userId = :userId " +
                         "AND (SELECT COALESCE(SUM(d.amount),0) FROM Donation d WHERE d.project = p) >= p.goalAmount")
         List<Project> listOfApprovedAndGoalReachedProject(@Param("status") String status, @Param("userId") Long userId);
+
+        Optional<Users> findByEmail(java.lang.String email);
 }

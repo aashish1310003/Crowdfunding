@@ -2,6 +2,7 @@ package com.s8.Crowdfunding.service;
 
 import com.s8.Crowdfunding.model.Project;
 import com.s8.Crowdfunding.model.Users;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.s8.Crowdfunding.dto.UserRequest;
 import com.s8.Crowdfunding.exceptions.ResourceNotFoundException;
@@ -35,7 +36,10 @@ public class UserService implements IUserService {
     public Users createUser(UserRequest userDto) {
         ModelMapper mapper = new ModelMapper();
         Users user = mapper.map(userDto, Users.class);
-
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        user.setPassword(encodedPassword);
         int passOut = Integer.parseInt(userDto.getEmail()
                 .chars()
                 .filter(Character::isDigit)

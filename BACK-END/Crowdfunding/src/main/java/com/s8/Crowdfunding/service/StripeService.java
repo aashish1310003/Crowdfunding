@@ -16,7 +16,8 @@ import java.util.Map;
 public class StripeService {
 
     public StripeResponse checkoutPayment(StripeRequest request) {
-        Stripe.apiKey = "sk_test_51QrH9qFR1CtvzQ43AEHTMOBSFpJoXSqzzzpb9lWoqDtLl1GeSp9TtEDRurxdqUxcIyqrYSCoNkGwTQvwppU11etL00qbcHQZnx";
+//        Stripe.apiKey = "sk_test_51QrH9qFR1CtvzQ43AEHTMOBSFpJoXSqzzzpb9lWoqDtLl1GeSp9TtEDRurxdqUxcIyqrYSCoNkGwTQvwppU11etL00qbcHQZnx";
+        Stripe.apiKey = "sk_test_51N98h2SIrdQU7nsMNe9LYcxy7B8Oi6HcAAzHMOyuXJh4WuiDSISXELutdPcPl8726hY56LQudHg5qt1KCN72ojxF00FUWtbVML";
 
         // Product Data
         Map<String, Object> productData = new HashMap<>();
@@ -24,7 +25,7 @@ public class StripeService {
 
         // Price Data
         Map<String, Object> priceData = new HashMap<>();
-        priceData.put("currency", "INR");
+        priceData.put("currency", "USD");
         priceData.put("unit_amount", request.getAmount());
         priceData.put("product_data", productData);
 
