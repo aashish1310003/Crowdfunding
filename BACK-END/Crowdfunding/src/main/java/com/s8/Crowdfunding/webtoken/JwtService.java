@@ -15,10 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.s8.Crowdfunding.model.Users;
+import com.s8.Crowdfunding.security.CustomUserDetailsService;
+
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY_STRING = "uvMboPw4hpEyRhuHf2uC12EyquIO7KxsW9p9QSBJ4zM="; // Replace with your actual key
+    private static final String SECRET_KEY_STRING = "uvMboPw4hpEyRhuHf2uC12EyquIO7KxsW9p9QSBJ4zM="; // Replace with your
+                                                                                                    // actual key
     private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(Base64.getDecoder().decode(SECRET_KEY_STRING));
     private static final long EXPIRATION_TIME = 864_000_000; // 10 days in milliseconds
 
@@ -44,15 +48,17 @@ public class JwtService {
 
     }
 
-
-
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
     public String generateToken(UserDetails userDetails) {
+        Users user = (Users) userDetails;
         Map<String, Object> claims = new HashMap<>();
-
+        claims.put("email", user.getEmail());
+        claims.put("userId", user.getUserId());
+        claims.put("roles", user.getRole());
+        claims.put("name", user.getName());
         return createToken(claims, userDetails.getUsername());
     }
 

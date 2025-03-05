@@ -6,6 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.s8.Crowdfunding.dto.UserRequest;
 import com.s8.Crowdfunding.exceptions.ResourceNotFoundException;
+import com.s8.Crowdfunding.exceptions.UserExistsException;
 import com.s8.Crowdfunding.repository.UserRepository;
 
 import java.time.Year;
@@ -33,7 +34,14 @@ public class UserService implements IUserService {
         return userRepository.findById(userId);
     }
 
-    public Users createUser(UserRequest userDto) {
+    public Users createUser(UserRequest userDto) throws UserExistsException {
+        if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+            throw new UserExistsException("user already exists with this email !");
+        }
+        int len = userDto.getEmail().length();
+        if (!userDto.getEmail().substring(len - 15).equals("@bitsathy.ac.in")) {
+            throw new UserExistsException("Supports only BIT email addresses");
+        }
         ModelMapper mapper = new ModelMapper();
         Users user = mapper.map(userDto, Users.class);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -52,19 +60,25 @@ public class UserService implements IUserService {
 
     public List<Project> getUserProjectsByStatus(Long userId, String status) {
         return getUsersById(userId).map(
-                (users)-> projectService.getProjectsByStatus(status).stream()
-                          .filter(project -> project.getUser().getUserId().equals(userId))
-                          .toList()
-        ).orElseThrow(()->new ResourceNotFoundException("No user found"));
+                (users) -> projectService.getProjectsByStatus(status).stream()
+                        .filter(project -> project.getUser().getUserId().equals(userId))
+                        .toList())
+                .orElseThrow(() -> new ResourceNotFoundException("No user found"));
     }
 
     public List<Project> getUserProjectsByTarget(Long userId, Boolean goal) {
         return getUsersById(userId).map(
-                (users)-> (goal?projectService.getProjectsByGoalReached():projectService.getProjectsByGoalNotReached()).stream()
+                (users) -> (goal ? projectService.getProjectsByGoalReached()
+                        : projectService.getProjectsByGoalNotReached()).stream()
                         .peek(System.out::println)
                         .filter(project -> project.getUser().getUserId().equals(userId))
                         .peek(System.out::println)
-                        .toList()
-        ).orElseThrow(()->new ResourceNotFoundException("No user found"));
+                        .toList())
+                .orElseThrow(() -> new ResourceNotFoundException("No user found"));
     }
+
+    public Users getUsersByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("No user found"));
+    }
+
 }

@@ -1,18 +1,15 @@
 package com.s8.Crowdfunding.controller;
 
 import com.s8.Crowdfunding.dto.ApiResponse;
-import com.s8.Crowdfunding.model.Project;
-import org.hibernate.annotations.NotFound;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatusCode;
+
 import org.springframework.web.bind.annotation.*;
 
 import com.s8.Crowdfunding.dto.UserRequest;
+import com.s8.Crowdfunding.exceptions.UserExistsException;
 import com.s8.Crowdfunding.service.UserService;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
+import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestController
@@ -26,25 +23,49 @@ public class UserController {
 
     @PostMapping("/create-user")
     public ResponseEntity<?> createUser(@RequestBody UserRequest userDto) {
-        // TODO: process POST request
-        return ResponseEntity.ok(userService.createUser(userDto));
+        try {
+            return ResponseEntity.ok(userService.createUser(userDto));
+        } catch (UserExistsException e) {
+            return ResponseEntity.status(CONFLICT).body(e.getMessage());
+        }
     }
 
     @GetMapping("/status")
-    public ResponseEntity<ApiResponse> getProjectByUserAndStatus(@RequestParam("id") Long userId, @RequestParam("status") String status) {
+    public ResponseEntity<ApiResponse> getProjectByUserAndStatus(@RequestParam("id") Long userId,
+            @RequestParam("status") String status) {
         try {
             return ResponseEntity.ok(new ApiResponse("SUCCESS", userService.getUserProjectsByStatus(userId, status)));
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
 
     @GetMapping("/target")
-    public ResponseEntity<ApiResponse>  getProjectByUserAndTarget(@RequestParam("id") Long userId, @RequestParam("goal") Boolean goal) {
+    public ResponseEntity<ApiResponse> getProjectByUserAndTarget(@RequestParam("id") Long userId,
+            @RequestParam("goal") Boolean goal) {
         try {
             return ResponseEntity.ok(new ApiResponse("SUCCESS", userService.getUserProjectsByTarget(userId, goal)));
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
+
+    @GetMapping("/by/email")
+    public ResponseEntity<ApiResponse> getUserByEmail(@RequestParam("email") String email) {
+        try {
+            return ResponseEntity.ok(new ApiResponse("SUCCESS", userService.getUsersByEmail(email)));
+        } catch (Exception e) {
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/by/id")
+    public ResponseEntity<ApiResponse> getUserById(@RequestParam("id") Long userId) {
+        try {
+            return ResponseEntity.ok(new ApiResponse("SUCCESS", userService.getUsersById(userId)));
+        } catch (Exception e) {
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
+    }
+
 }
