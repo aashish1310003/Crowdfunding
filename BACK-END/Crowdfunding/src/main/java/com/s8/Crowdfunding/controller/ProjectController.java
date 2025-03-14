@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -67,9 +68,9 @@ public class ProjectController {
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<?> updateProjectStatus(@PathVariable Long id, @RequestBody String status) {
+    public ResponseEntity<?> updateProjectStatus(@PathVariable Long id, @RequestBody Map<String, String> status) {
         try {
-            Project updatedProject = projectService.updateProjectStatusById(id, status);
+            Project updatedProject = projectService.updateProjectStatusById(id, status.get("status"));
             return ResponseEntity.ok(updatedProject);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
