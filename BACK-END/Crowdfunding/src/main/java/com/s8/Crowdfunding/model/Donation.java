@@ -15,8 +15,8 @@ import java.util.Date;
 @Setter
 public class Donation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long donationId;
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String donationId;
     private Double amount;
     private Date donationDate;
     private String donorVisibility;

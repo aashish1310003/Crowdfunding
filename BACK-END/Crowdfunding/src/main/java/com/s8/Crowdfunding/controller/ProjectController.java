@@ -1,16 +1,20 @@
 package com.s8.Crowdfunding.controller;
 
+import com.s8.Crowdfunding.dto.ApiResponse;
+import com.s8.Crowdfunding.dto.ProjectResponse;
 import com.s8.Crowdfunding.exceptions.AppealLimitExceededException;
+import com.s8.Crowdfunding.exceptions.InvaildStatusException;
 import com.s8.Crowdfunding.exceptions.ResourceNotFoundException;
 import com.s8.Crowdfunding.model.Project;
 import com.s8.Crowdfunding.service.ProjectService;
-
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -18,65 +22,108 @@ import java.util.Map;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final ModelMapper mapper;
 
     // Constructor-based dependency injection
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService, ModelMapper mapper) {
         this.projectService = projectService;
+        this.mapper = mapper;
     }
 
     // Endpoint to get all projects
     @GetMapping
-    public ResponseEntity<List<Project>> getAllProjects() {
-        List<Project> projects = projectService.getAllProjects();
-        System.out.println(projects);
+    public ResponseEntity<?> getAllProjects() {
+        List<ProjectResponse> projects = projectService.getAllProjects().stream()
+                .map(project -> mapper.map(project, ProjectResponse.class))
+                .collect(Collectors.toList());
         return ResponseEntity.ok(projects);
     }
 
     // Endpoint to get a project by its ID
     @GetMapping("/{id}")
-    public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
-        Project project = projectService.getProjectById(id);
-        return ResponseEntity.ok(project);
+    public ResponseEntity<?> getProjectById(@PathVariable Long id) {
+        try {
+            Project project = projectService.getProjectById(id);
+            return ResponseEntity.ok(mapper.map(project, ProjectResponse.class));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(409).body(new ApiResponse("Project Not Found with this ID", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't get Project", e.getMessage()));
+        }
     }
 
     // Endpoint to get a project by its title
     @GetMapping("/title/{title}")
-    public ResponseEntity<Project> getProjectByTitle(@PathVariable String title) {
-        Project project = projectService.getProjectByName(title);
-        return ResponseEntity.ok(project);
+    public ResponseEntity<?> getProjectByTitle(@PathVariable String title) {
+        try {
+            Project project = projectService.getProjectByName(title);
+            return ResponseEntity.ok(mapper.map(project, ProjectResponse.class));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(409).body(new ApiResponse("Project Not Found with this ID", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't get Project", e.getMessage()));
+        }
     }
 
     // Endpoint to get projects by status
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<Project>> getProjectsByStatus(@PathVariable String status) {
-        List<Project> projects = projectService.getProjectsByStatus(status);
-        return ResponseEntity.ok(projects);
+    public ResponseEntity<?> getProjectsByStatus(@PathVariable String status) {
+
+        try {
+            List<ProjectResponse> projects = projectService.getProjectsByStatus(status).stream()
+                    .map(project -> mapper.map(project, ProjectResponse.class))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(projects);
+        } catch (InvaildStatusException e) {
+            return ResponseEntity.status(409).body(new ApiResponse("invalid status", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't get Project", e.getMessage()));
+        }
     }
 
     // Endpoint to get projects with approved status and goal reached
     @GetMapping("/goal/reached")
-    public ResponseEntity<List<Project>> getProjectsByGoalReached() {
-        List<Project> projects = projectService.getProjectsByGoalReached();
+    public ResponseEntity<?> getProjectsByGoalReached() {
+        List<ProjectResponse> projects = projectService.getProjectsByGoalReached().stream()
+                .map(project -> mapper.map(project, ProjectResponse.class))
+                .collect(Collectors.toList());
         return ResponseEntity.ok(projects);
     }
 
     // Endpoint to get projects with approved status and goal not reached
     @GetMapping("/goal/not-reached")
-    public ResponseEntity<List<Project>> getProjectsByGoalNotReached() {
-        List<Project> projects = projectService.getProjectsByGoalNotReached();
+    public ResponseEntity<?> getProjectsByGoalNotReached() {
+        List<ProjectResponse> projects = projectService.getProjectsByGoalNotReached().stream()
+                .map(project -> mapper.map(project, ProjectResponse.class))
+                .collect(Collectors.toList());
         return ResponseEntity.ok(projects);
+    }
+
+    @GetMapping("/project/by/user/{userId}")
+    public ResponseEntity<?> getProjectsByUser(@PathVariable("userId") Long userId) {
+        try {
+            List<ProjectResponse> projects = projectService.getProjectByUser(userId).stream()
+                    .map(project -> mapper.map(project, ProjectResponse.class))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(projects);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(409).body(new ApiResponse("Project Not Found with this USER_ID", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't get Project", e.getMessage()));
+        }
     }
 
     @PutMapping("/{id}/status")
     public ResponseEntity<?> updateProjectStatus(@PathVariable Long id, @RequestBody Map<String, String> status) {
         try {
             Project updatedProject = projectService.updateProjectStatusById(id, status.get("status"));
-            return ResponseEntity.ok(updatedProject);
+            return ResponseEntity.ok(mapper.map(updatedProject, ProjectResponse.class));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (AppealLimitExceededException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Appeal count exceeds", e.getMessage()));
+        } catch (InvaildStatusException e) {
+            return ResponseEntity.status(409).body(new ApiResponse("invalid status", e.getMessage()));
+        }catch (AppealLimitExceededException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("can't update project", e.getMessage()));
         }
     }
-
 }

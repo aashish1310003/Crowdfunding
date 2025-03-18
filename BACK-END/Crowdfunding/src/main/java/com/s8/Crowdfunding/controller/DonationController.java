@@ -1,34 +1,60 @@
 package com.s8.Crowdfunding.controller;
 
+import com.s8.Crowdfunding.dto.ApiResponse;
+import com.s8.Crowdfunding.dto.DonationRequest;
+import com.s8.Crowdfunding.dto.DonationResponse;
+import com.s8.Crowdfunding.exceptions.ResourceNotFoundException;
 import com.s8.Crowdfunding.model.Donation;
 import com.s8.Crowdfunding.service.DonationService;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import org.modelmapper.ModelMapper;
 import java.util.List;
 
 @RestController
-@RequestMapping("/donation")
+@RequestMapping("/donations")
 public class DonationController {
 
-    private DonationService donationService;
+    private final DonationService donationService;
+    private final ModelMapper mapper;
 
-    public DonationController(DonationService donationService) {
+    @Autowired
+    public DonationController(DonationService donationService, ModelMapper mapper) {
         this.donationService = donationService;
+        this.mapper = mapper;
     }
 
-    @PostMapping("/donation/{id}/project")
-    public ResponseEntity<List<Donation>> getDonationByProjectId(@PathVariable long id) {
+    @GetMapping("/donation/{id}/project")
+    public ResponseEntity<?> getDonationByProjectId(@PathVariable long id) {
+        try {
             return ResponseEntity.ok(donationService.getAllDonationsByProjectId(id));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(409).body(new ApiResponse("Project Not Found with this ID", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't get Donation", e.getMessage()));
+        }
     }
 
-    @PostMapping("/donation/{id}/user")
-    public ResponseEntity<List<Donation>> getDonationByUserId(@PathVariable long id) {
-        return ResponseEntity.ok(donationService.getAllDonationsByUserId(id));
+    @GetMapping("/donation/{id}/user")
+    public ResponseEntity<?> getDonationByUserId(@PathVariable long id) {
+        try {
+            return ResponseEntity.ok(donationService.getAllDonationsByUserId(id));
+        }catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(409).body(new ApiResponse("User Not Found with this ID", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't get Donation", e.getMessage()));
+        }
     }
 
+    @PostMapping("/addDonation")
+    public ResponseEntity<?> addDonation(@RequestBody DonationRequest donation) {
+        try {
+            return ResponseEntity.ok(mapper.map(donationService.createDonation(donation), DonationResponse.class));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't get Donation", e.getMessage()));
+        }
+    }
 }

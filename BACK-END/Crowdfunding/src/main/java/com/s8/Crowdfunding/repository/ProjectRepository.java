@@ -1,6 +1,7 @@
 package com.s8.Crowdfunding.repository;
 
 import com.s8.Crowdfunding.model.Project;
+import com.s8.Crowdfunding.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -35,4 +36,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Query("SELECT p FROM Project p WHERE p.status = 'APPROVED' " +
             "AND (SELECT COALESCE(SUM(d.amount), 0) FROM Donation d WHERE d.project = p) >= p.goalAmount")
     List<Project> listOfApprovedAndGoalReachedProject();
+
+    List<Project> findProjectByUser(Users user);
 }

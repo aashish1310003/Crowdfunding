@@ -1,5 +1,6 @@
 package com.s8.Crowdfunding.service;
 
+import com.s8.Crowdfunding.dto.ProjectResponse;
 import com.s8.Crowdfunding.model.Project;
 
 import java.util.Date;
@@ -11,6 +12,8 @@ public interface IProjectService {
     List<Project> getAllProjects();
 
     Project getProjectById(Long id);
+
+    List<Project> getProjectByUser(Long id);
 
     Project getProjectByName(String name);
 

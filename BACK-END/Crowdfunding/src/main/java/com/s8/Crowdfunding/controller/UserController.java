@@ -2,6 +2,8 @@ package com.s8.Crowdfunding.controller;
 
 import com.s8.Crowdfunding.dto.ApiResponse;
 
+import com.s8.Crowdfunding.exceptions.InvaildStatusException;
+import com.s8.Crowdfunding.exceptions.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import com.s8.Crowdfunding.dto.UserRequest;
@@ -26,25 +28,27 @@ public class UserController {
         try {
             return ResponseEntity.ok(userService.createUser(userDto));
         } catch (UserExistsException e) {
-            return ResponseEntity.status(CONFLICT).body(e.getMessage());
+            return ResponseEntity.status(CONFLICT).body(new ApiResponse("user already exits", e.getMessage() + ""));
+        } catch (Exception e) {
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("can't create user", e.getMessage()));
         }
     }
 
     @GetMapping("/status")
-    public ResponseEntity<ApiResponse> getProjectByUserAndStatus(@RequestParam("id") Long userId,
+    public ResponseEntity<?> getProjectByUserAndStatus(@RequestParam("id") Long userId,
             @RequestParam("status") String status) {
         try {
-            return ResponseEntity.ok(new ApiResponse("SUCCESS", userService.getUserProjectsByStatus(userId, status)));
+            return ResponseEntity.ok(userService.getUserProjectsByStatus(userId, status));
         } catch (Exception e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
 
     @GetMapping("/target")
-    public ResponseEntity<ApiResponse> getProjectByUserAndTarget(@RequestParam("id") Long userId,
+    public ResponseEntity<?> getProjectByUserAndTarget(@RequestParam("id") Long userId,
             @RequestParam("goal") Boolean goal) {
         try {
-            return ResponseEntity.ok(new ApiResponse("SUCCESS", userService.getUserProjectsByTarget(userId, goal)));
+            return ResponseEntity.ok( userService.getUserProjectsByTarget(userId, goal));
         } catch (Exception e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
@@ -67,5 +71,6 @@ public class UserController {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
+
 
 }

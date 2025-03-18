@@ -4,7 +4,6 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import org.springframework.stereotype.Service;
-
 import com.s8.Crowdfunding.dto.StripeRequest;
 import com.s8.Crowdfunding.dto.StripeResponse;
 
@@ -16,8 +15,7 @@ import java.util.Map;
 public class StripeService {
 
     public StripeResponse checkoutPayment(StripeRequest request) {
-//        Stripe.apiKey = "sk_test_51QrH9qFR1CtvzQ43AEHTMOBSFpJoXSqzzzpb9lWoqDtLl1GeSp9TtEDRurxdqUxcIyqrYSCoNkGwTQvwppU11etL00qbcHQZnx";
-        Stripe.apiKey = "sk_test_51N98h2SIrdQU7nsMNe9LYcxy7B8Oi6HcAAzHMOyuXJh4WuiDSISXELutdPcPl8726hY56LQudHg5qt1KCN72ojxF00FUWtbVML";
+        Stripe.apiKey = "sk_test_51QrH9qFR1CtvzQ43AEHTMOBSFpJoXSqzzzpb9lWoqDtLl1GeSp9TtEDRurxdqUxcIyqrYSCoNkGwTQvwppU11etL00qbcHQZnx";
 
         // Product Data
         Map<String, Object> productData = new HashMap<>();
@@ -25,7 +23,7 @@ public class StripeService {
 
         // Price Data
         Map<String, Object> priceData = new HashMap<>();
-        priceData.put("currency", "USD");
+        priceData.put("currency", request.getCurrency()); // ✅ FIXED: Use dynamic currency
         priceData.put("unit_amount", request.getAmount());
         priceData.put("product_data", productData);
 
@@ -37,8 +35,12 @@ public class StripeService {
         // Session Parameters
         Map<String, Object> params = new HashMap<>();
         params.put("mode", "payment");
-        params.put("success_url", "http://localhost:8080/success");
-        params.put("cancel_url", "http://localhost:8080/cancel");
+        params.put("success_url",
+                "http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}&amount=" + request.getAmount()); // ✅
+                                                                                                                         // Redirect
+                                                                                                                         // to
+                                                                                                                         // frontend
+        params.put("cancel_url", "http://localhost:3000/payment-failure"); // ✅ Redirect to frontend
         params.put("line_items", List.of(lineItem));
 
         try {
