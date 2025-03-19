@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
+import { BASE_URL } from "../api/api";
 // Import jwtDecode to decode token
 import "../styles/myprojects.css";
 
@@ -25,7 +26,7 @@ const MyProjects = () => {
     if (!userId) return;
 
     // Fetch only projects of the logged-in user
-    fetch(`http://localhost:8080/projects/project/by/user/${userId}`)
+    fetch(`${BASE_URL}/projects/project/by/user/${userId}`)
       .then((response) => response.json())
       .then((data) => {
         setProjects(Array.isArray(data) ? data : [data]);

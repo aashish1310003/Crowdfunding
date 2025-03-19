@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { BASE_URL } from "../api/api";
 
 const ProjectDetails = () => {
   const { id } = useParams();
@@ -7,7 +8,7 @@ const ProjectDetails = () => {
   const [project, setProject] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/projects/${id}`)
+    fetch(`${BASE_URL}/projects/${id}`)
       .then((response) => response.json())
       .then((data) => setProject(data))
       .catch((error) =>

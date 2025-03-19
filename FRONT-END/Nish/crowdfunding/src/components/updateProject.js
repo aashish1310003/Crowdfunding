@@ -11,12 +11,15 @@ const UpdateProject = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/projects/${projectId}`)
+      .get(`${BASE_URL}/projects/${projectId}`)
       .then((res) => {
         const projectData = res.data;
         setProject({
           ...projectData,
           userId: localStorage.getItem("userId"), // Ensure userId is included
+          deadline: projectData.deadline
+            ? projectData.deadline.replace(" ", "T").slice(0, 16) // Convert to datetime-local format
+            : "",
         });
       })
       .catch((err) => console.error("Error fetching project:", err));
@@ -32,7 +35,7 @@ const UpdateProject = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`http://localhost:8080/projects/update`, project)
+      .post(`${BASE_URL}/projects/update`, project)
       .then(() => navigate("/"))
       .catch((err) => console.error("Error updating project:", err));
   };

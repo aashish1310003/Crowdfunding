@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { BASE_URL } from "../api/api";
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -18,21 +19,18 @@ const PaymentSuccess = () => {
       hasSaved.current = true; // Mark as executed
 
       try {
-        const response = await fetch(
-          "http://localhost:8080/donations/addDonation",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              donationId: sessionId.toString(),
-              amount: amount / 100,
-              donorVisibility: "PUBLIC",
-              status: "COMPLETED",
-              userId: userId,
-              projectId: projectId,
-            }),
-          }
-        );
+        const response = await fetch(`${BASE_URL}/donations/addDonation`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            donationId: sessionId.toString(),
+            amount: amount / 100,
+            donorVisibility: "PUBLIC",
+            status: "COMPLETED",
+            userId: userId,
+            projectId: projectId,
+          }),
+        });
 
         if (response.ok) {
           console.log("Donation saved successfully.");

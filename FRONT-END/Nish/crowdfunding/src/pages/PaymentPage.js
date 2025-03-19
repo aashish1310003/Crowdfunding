@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { BASE_URL } from "../api/api";
 
 const DonationPage = () => {
   const { id } = useParams();
@@ -8,7 +9,7 @@ const DonationPage = () => {
   const [amount, setAmount] = useState("");
 
   useEffect(() => {
-    fetch(`http://localhost:8080/projects/${id}`)
+    fetch(`${BASE_URL}/projects/${id}`)
       .then((response) => response.json())
       .then((data) => setProject(data))
       .catch((error) =>
@@ -27,21 +28,18 @@ const DonationPage = () => {
       localStorage.setItem("currentProjectId", id);
       localStorage.setItem("donationAmount", amount);
 
-      const response = await fetch(
-        "http://localhost:8080/payment/stripe/checkout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: project.title,
-            quantity: 1,
-            amount: amount * 100, // Convert INR to paise
-            currency: "INR",
-          }),
-        }
-      );
+      const response = await fetch(`${BASE_URL}/payment/stripe/checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: project.title,
+          quantity: 1,
+          amount: amount * 100, // Convert INR to paise
+          currency: "INR",
+        }),
+      });
 
       const data = await response.json();
 

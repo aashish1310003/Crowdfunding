@@ -27,7 +27,7 @@ const CreateProject = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`http://localhost:8080/projects/create`, project) // Corrected URL
+      .post(`${BASE_URL}/projects/create`, project) // Corrected URL
       .then(() => navigate("/"))
       .catch((err) => console.error(err));
   };
