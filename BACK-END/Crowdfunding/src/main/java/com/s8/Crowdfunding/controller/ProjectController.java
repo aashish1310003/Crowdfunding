@@ -1,9 +1,11 @@
 package com.s8.Crowdfunding.controller;
 
 import com.s8.Crowdfunding.dto.ApiResponse;
+import com.s8.Crowdfunding.dto.ProjectRequest;
 import com.s8.Crowdfunding.dto.ProjectResponse;
 import com.s8.Crowdfunding.exceptions.AppealLimitExceededException;
 import com.s8.Crowdfunding.exceptions.InvaildStatusException;
+import com.s8.Crowdfunding.exceptions.InvalidUserAccessException;
 import com.s8.Crowdfunding.exceptions.ResourceNotFoundException;
 import com.s8.Crowdfunding.model.Project;
 import com.s8.Crowdfunding.service.ProjectService;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
@@ -25,7 +28,7 @@ public class ProjectController {
     private final ModelMapper mapper;
 
     // Constructor-based dependency injection
-    public ProjectController(ProjectService projectService, ModelMapper mapper) {
+    public ProjectController(ProjectService projectService, ModelMapper mapper, ModelMapper modelMapper) {
         this.projectService = projectService;
         this.mapper = mapper;
     }
@@ -119,11 +122,43 @@ public class ProjectController {
             Project updatedProject = projectService.updateProjectStatusById(id, status.get("status"));
             return ResponseEntity.ok(mapper.map(updatedProject, ProjectResponse.class));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Appeal count exceeds", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("can't update status", e.getMessage()));
         } catch (InvaildStatusException e) {
             return ResponseEntity.status(409).body(new ApiResponse("invalid status", e.getMessage()));
         }catch (AppealLimitExceededException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("can't update project", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("can't update status", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't update status", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> createProject(@RequestBody ProjectRequest projectRequest) {
+        System.out.println(projectRequest.toString());
+        try {
+            Project project = projectService.createProject(projectRequest);
+            return ResponseEntity.ok(mapper.map(project, ProjectResponse.class));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't create project", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> updateProject(@RequestBody ProjectRequest projectRequest) {
+        System.out.println(projectRequest.toString());
+        try {
+            Project project = projectService.updateProjectById(projectRequest);
+            return ResponseEntity.ok(mapper.map(project, ProjectResponse.class));
+        }catch (InvalidUserAccessException e){
+            return ResponseEntity.status(409).body(new ApiResponse("can't update project", e.getMessage()));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("can't update ", e.getMessage()));
+        } catch (InvaildStatusException e) {
+            return ResponseEntity.status(409).body(new ApiResponse("invalid status", e.getMessage()));
+        }catch (AppealLimitExceededException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("Appeal limit exceeds", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't update project", e.getMessage()));
         }
     }
 }

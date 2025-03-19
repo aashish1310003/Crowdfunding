@@ -1,11 +1,9 @@
 package com.s8.Crowdfunding.service;
 
-import com.s8.Crowdfunding.dto.ProjectResponse;
+import com.s8.Crowdfunding.dto.ProjectRequest;
 import com.s8.Crowdfunding.model.Project;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public interface IProjectService {
 
@@ -27,5 +25,9 @@ public interface IProjectService {
 
     Project updateProjectStatusById(Long id, String status);
 
-    Optional<Project> updateProjectById(Long id, String description, Double goalAmount, Date date, String reportUrl);
+//    Optional<Project> updateProjectById(Long id, String description, Double goalAmount, Date date, String reportUrl);
+
+    Project updateProjectById(ProjectRequest projectRequest);
+
+    Project createProject(ProjectRequest projectRequest);
 }
