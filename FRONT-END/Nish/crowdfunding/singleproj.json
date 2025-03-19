@@ -1,0 +1,22 @@
+{
+  "projects": [
+    {
+      "projectId": 1,
+      "title": "AI-Powered Tutor",
+      "description": "An AI-based tutoring system for personalized learning.",
+      "goalAmount": 50000,
+      "deadline": "2025-05-31T18:30:00.000+00:00",
+      "reportPdfUrl": "https://drive.google.com/file/d/1dyS11ZoLbnakvROvX-IJDI7xZF80ASzc/preview",
+      "appealCount": 0,
+      "status": "PENDING",
+      "user": {
+        "userId": 1,
+        "name": "Alice Johnson",
+        "email": "alice@example.com",
+        "password": "password123",
+        "role": "USER"
+      },
+      "id": "083b"
+    }
+  ]
+}

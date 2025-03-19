@@ -1,0 +1,140 @@
+{
+  "projects": [
+    {
+      "projectId": 1,
+      "title": "AI-Powered Tutor",
+      "description": "An AI-based tutoring system for personalized learning.",
+      "goalAmount": 50000,
+      "deadline": "2025-05-31T18:30:00.000+00:00",
+      "reportPdfUrl": "https://example.com/reports/ai-tutor.pdf",
+      "appealCount": 0,
+      "status": "PENDING",
+      "user": {
+        "userId": 1,
+        "name": "Alice Johnson",
+        "email": "alice@example.com",
+        "password": "password123",
+        "role": "USER"
+      },
+      "id": "083b"
+    },
+    {
+      "projectId": 2,
+      "title": "Smart Irrigation System",
+      "description": "IoT-based automated irrigation system for efficient water usage.",
+      "goalAmount": 75000,
+      "deadline": "2025-07-14T18:30:00.000+00:00",
+      "reportPdfUrl": "https://example.com/reports/irrigation.pdf",
+      "appealCount": 1,
+      "status": "PENDING",
+      "user": {
+        "userId": 2,
+        "name": "Bob Smith",
+        "email": "bob@example.com",
+        "password": "password123",
+        "role": "ADMIN"
+      },
+      "id": "2afa"
+    },
+    {
+      "projectId": 3,
+      "title": "Renewable Energy Tracker",
+      "description": "A web platform to monitor and predict renewable energy generation.",
+      "goalAmount": 60000,
+      "deadline": "2025-08-09T18:30:00.000+00:00",
+      "reportPdfUrl": "https://example.com/reports/energy-tracker.pdf",
+      "appealCount": 2,
+      "status": "CREATED",
+      "user": {
+        "userId": 3,
+        "name": "Charlie Brown",
+        "email": "charlie@example.com",
+        "password": "password123",
+        "role": "USER"
+      },
+      "id": "57f5"
+    },
+    {
+      "projectId": 4,
+      "title": "Crowdsourced Traffic Monitoring",
+      "description": "A real-time traffic analysis system using crowdsourced data.",
+      "goalAmount": 80000,
+      "deadline": "2025-09-04T18:30:00.000+00:00",
+      "reportPdfUrl": "https://example.com/reports/traffic-monitoring.pdf",
+      "appealCount": 3,
+      "status": "REJECTED",
+      "user": {
+        "userId": 4,
+        "name": "David Wilson",
+        "email": "david@example.com",
+        "password": "password123",
+        "role": "ADMIN"
+      },
+      "id": "b424"
+    },
+    {
+      "projectId": 5,
+      "title": "Blockchain-Based Voting",
+      "description": "A secure online voting system leveraging blockchain technology.",
+      "goalAmount": 100000,
+      "deadline": "2025-10-19T18:30:00.000+00:00",
+      "reportPdfUrl": "https://example.com/reports/blockchain-voting.pdf",
+      "appealCount": 0,
+      "status": "APPROVED",
+      "user": {
+        "userId": 5,
+        "name": "Emma Davis",
+        "email": "emma@example.com",
+        "password": "password123",
+        "role": "USER"
+      },
+      "id": "b2cc"
+    },
+    {
+      "projectId": 6,
+      "title": "AI-Powered Tutor",
+      "description": "An AI-based tutoring system for personalized learning.",
+      "goalAmount": 50000,
+      "deadline": "2025-05-31T18:30:00.000+00:00",
+      "reportPdfUrl": "https://example.com/reports/ai-tutor.pdf",
+      "appealCount": 0,
+      "status": "CREATED",
+      "user": {
+        "userId": 1,
+        "name": "Alice Johnson",
+        "email": "alice@example.com",
+        "password": "password123",
+        "role": "USER"
+      },
+      "id": "b172"
+    },
+    {
+      "projectId": 7,
+      "title": "Smart Irrigation System",
+      "description": "IoT-based automated irrigation system for efficient water usage.",
+      "goalAmount": 75000,
+      "deadline": "2025-07-14T18:30:00.000+00:00",
+      "reportPdfUrl": "https://example.com/reports/irrigation.pdf",
+      "appealCount": 3,
+      "status": "REJECTED",
+      "user": {
+        "userId": 2,
+        "name": "Bob Smith",
+        "email": "bob@example.com",
+        "password": "password123",
+        "role": "ADMIN"
+      },
+      "id": "32ba"
+    },
+    {
+      "id": "d718",
+      "title": "test",
+      "description": "test",
+      "goalAmount": "4000",
+      "deadline": "2025-02-22T19:08",
+      "reportPdfUrl": "efqef.com",
+      "status": "PENDING",
+      "userId": 1
+    }
+  ]
+}
