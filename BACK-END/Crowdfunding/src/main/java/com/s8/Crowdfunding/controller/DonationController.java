@@ -12,7 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.modelmapper.ModelMapper;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/donations")
@@ -31,6 +34,19 @@ public class DonationController {
     public ResponseEntity<?> getDonationByProjectId(@PathVariable long id) {
         try {
             return ResponseEntity.ok(donationService.getAllDonationsByProjectId(id));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(409).body(new ApiResponse("Project Not Found with this ID", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't get Donation", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/donation/sum/{id}/project")
+    public ResponseEntity<?> getSumOfDonationByProjectId(@PathVariable long id) {
+        try {
+            Map<String,Double> mp = new HashMap<>();
+            mp.put("amount" , donationService.sumOfAllDonationsById(id));
+            return ResponseEntity.ok(mp);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(409).body(new ApiResponse("Project Not Found with this ID", e.getMessage()));
         } catch (Exception e) {

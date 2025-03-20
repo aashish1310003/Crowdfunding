@@ -28,7 +28,7 @@ const HomePage = () => {
 
   useEffect(() => {
     console.log(`${BASE_URL}`);
-    fetch(`${BASE_URL}/projects`)
+    fetch(`${BASE_URL}/projects/status/APPROVED`)
       .then((response) => response.json())
       .then((data) => {
         setProjects(data);
@@ -69,19 +69,12 @@ const HomePage = () => {
             <div key={project.projectId} className="project-card">
               <h3>{project.title}</h3>
               <p>{project.description.split(" ").slice(0, 15).join(" ")}...</p>
-              <p>
+              {/* <p>
                 <strong>Goal:</strong> ${project.goalAmount}
-              </p>
+              </p> */}
               <p>
                 <strong>Deadline:</strong>{" "}
                 {new Date(project.deadline).toLocaleDateString()}
-              </p>
-              <p>
-                <strong>Status:</strong> {project.status}
-              </p>
-              <p>
-                <strong>Creator:</strong> {project.user?.name} (
-                {project.user?.email})
               </p>
 
               {/* Pass role via Link state */}

@@ -65,6 +65,18 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
+    public List<Project> getProjectForAdmin(){
+        List<Project> projects = getProjectsByStatus("CREATED");
+        projects.addAll(getProjectsByStatus("PENDING"));
+        return projects;
+    }
+
+    @Override
+    public List<Project> getApprovedProjectsn(){
+        return getProjectsByStatus("APPROVED");
+    }
+
+    @Override
     public List<Project> getProjectsByGoalNotReached() {
         return projectRepository.findByStatus("APPROVED").stream()
                 .filter(project -> donationService.sumOfAllDonationsById(project.getProjectId()) < project.getGoalAmount())
@@ -85,7 +97,7 @@ public class ProjectService implements IProjectService {
                 .orElseThrow(() -> new ResourceNotFoundException("Project with id " + id + " not found"));
 
 
-        if (project.getStatus().equals("REJECTED") && status.equals("CREATED")) {
+        if ((project.getStatus().equals("CREATED") || project.getStatus().equals("PENDING")) && status.equals("REJECTED")) {
             project.setAppealCount(project.getAppealCount() + 1);
         }
 

@@ -19,6 +19,10 @@ public interface IProjectService {
 
     List<Project> getProjectsByGoalReached();
 
+    List<Project> getProjectForAdmin();
+
+    List<Project> getApprovedProjectsn();
+
     List<Project> getProjectsByGoalNotReached();
 
     // Optional<Project> updateProjectById(Long id, String status);

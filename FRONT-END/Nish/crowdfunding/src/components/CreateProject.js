@@ -28,7 +28,7 @@ const CreateProject = () => {
     e.preventDefault();
     axios
       .post(`${BASE_URL}/projects/create`, project) // Corrected URL
-      .then(() => navigate("/"))
+      .then(() => navigate("/home"))
       .catch((err) => console.error(err));
   };
 

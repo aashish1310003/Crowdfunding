@@ -25,7 +25,7 @@ const MyProjects = () => {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`${BASE_URL}/projects/project/by/user/${userId}`)
+    fetch(`${BASE_URL}/projects/admin`)
       .then((response) => response.json())
       .then((data) => {
         setProjects(Array.isArray(data) ? data : [data]);
@@ -37,11 +37,11 @@ const MyProjects = () => {
     (project) => project.status === selectedStatus
   );
 
-  const statuses = ["CREATED", "PENDING", "APPROVED", "REJECTED"];
+  const statuses = ["CREATED", "PENDING"];
 
   return (
     <div className="myprojects-container">
-      <h1>My Projects</h1>
+      <h1>Evaluate these Projects</h1>
       <div className="status-buttons">
         {statuses.map((status) => (
           <button
@@ -60,7 +60,9 @@ const MyProjects = () => {
             <div
               key={project.projectId}
               className="project-card"
-              onClick={() => navigate(`/project/${project.projectId}`)} // Navigate to project details
+              onClick={() =>
+                navigate(`/admin/project-details/${project.projectId}`)
+              } // Navigate to project details
               style={{ cursor: "pointer" }} // Indicate clickable behavior
             >
               <h3>{project.title}</h3>

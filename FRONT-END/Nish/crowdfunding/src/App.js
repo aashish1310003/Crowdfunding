@@ -5,6 +5,9 @@ import {
   Route,
   useLocation,
 } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import HomePage from "./pages/HomePage";
 import ProjectDetails from "./pages/ProjectDetails";
 import Navbar from "./components/Navbar";
@@ -17,11 +20,23 @@ import PaymentPage from "./pages/PaymentPage";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailure from "./pages/PaymentFailure";
 import UpdateProject from "./components/updateProject";
+import AdminProjects from "./pages/AdminProjects";
+import AdminProjectDetails from "./pages/AdminProjectDetails";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
+        {/* Global Toast Container for error notifications */}
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          closeOnClick={false}
+          pauseOnHover={true}
+          draggable={true}
+          theme="light"
+        />
         <MainLayout />
       </Router>
     </AuthProvider>
@@ -43,6 +58,11 @@ function MainLayout() {
         <Route path="/update/:projectId" element={<UpdateProject />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failure" element={<PaymentFailure />} />
+        <Route path="/admin/projects" element={<AdminProjects />} />
+        <Route
+          path="/admin/project-details/:projectId"
+          element={<AdminProjectDetails />}
+        />
       </Routes>
     </>
   );

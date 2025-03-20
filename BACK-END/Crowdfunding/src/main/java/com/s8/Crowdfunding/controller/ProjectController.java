@@ -84,6 +84,34 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/admin")
+    public ResponseEntity<?> getProjectsforAdmin() {
+        try {
+            List<ProjectResponse> projects = projectService.getProjectForAdmin().stream()
+                    .map(project -> mapper.map(project, ProjectResponse.class))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(projects);
+        } catch (InvaildStatusException e) {
+            return ResponseEntity.status(409).body(new ApiResponse("invalid status", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't get Project", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/approved")
+    public ResponseEntity<?> getApprovedProjects() {
+        try {
+            List<ProjectResponse> projects = projectService.getProjectForAdmin().stream()
+                    .map(project -> mapper.map(project, ProjectResponse.class))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(projects);
+        } catch (InvaildStatusException e) {
+            return ResponseEntity.status(409).body(new ApiResponse("invalid status", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't get Project", e.getMessage()));
+        }
+    }
+
     // Endpoint to get projects with approved status and goal reached
     @GetMapping("/goal/reached")
     public ResponseEntity<?> getProjectsByGoalReached() {
