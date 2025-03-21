@@ -61,6 +61,7 @@ public class UserService implements IUserService {
                 .collect(Collectors.joining());
 
         int passOut = extractedDigits.isEmpty() ? -1 : Integer.parseInt(extractedDigits);
+
         System.out.println("Extracted Year: " + passOut);
 
         // Assign role based on extracted year
