@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { BASE_URL } from "../api/api";
 import "../styles/myprojects.css";
+import axiosInstance from "../middleware/axiosInstance";
+import { CircularProgress } from "@mui/material";
 
 const MyProjects = () => {
   const [projects, setProjects] = useState([]);
@@ -25,9 +27,11 @@ const MyProjects = () => {
   useEffect(() => {
     if (!userId) return;
 
-    fetch(`${BASE_URL}/projects/project/by/user/${userId}`)
-      .then((response) => response.json())
-      .then((data) => {
+    axiosInstance
+      .get(`${BASE_URL}/projects/project/by/user/${userId}`)
+      .then((response) => {
+        // Access the data directly from the response
+        const data = response.data;
         setProjects(Array.isArray(data) ? data : [data]);
       })
       .catch((error) => console.error("Error fetching projects:", error));
@@ -71,7 +75,9 @@ const MyProjects = () => {
             </div>
           ))
         ) : (
-          <p>No {selectedStatus.toLowerCase()} projects found.</p>
+          <p>
+            <CircularProgress />{" "}
+          </p>
         )}
       </div>
     </div>

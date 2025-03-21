@@ -4,49 +4,48 @@ import { jwtDecode } from "jwt-decode";
 import { FaUserCircle } from "react-icons/fa"; // Import profile icon
 import Navbar from "../components/Navbar";
 import "../styles/styles.css";
-import { BASE_URL } from "../api/api";
+import axiosInstance from "../middleware/axiosInstance";
 
 const HomePage = () => {
   const [projects, setProjects] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [role, setRole] = useState("ADMIN"); // Default role for testing
+  const [role, setRole] = useState(null);
   const [userEmail, setUserEmail] = useState("");
+  const [tokenLoaded, setTokenLoaded] = useState(false); // New state
 
+  // ✅ Load token and set user info
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decoded = jwtDecode(token);
         console.log("Decoded Token:", decoded);
-        // setRole(decoded.roles); // Uncomment when integrating actual auth
+        setRole(decoded.roles); // Ensure this matches your backend response
         setUserEmail(decoded.name);
       } catch (error) {
         console.error("Invalid token", error);
       }
     }
+    setTokenLoaded(true); // Mark that token is now processed
   }, []);
 
+  // ✅ Fetch projects only after token is loaded
   useEffect(() => {
-    console.log(`${BASE_URL}`);
-    fetch(`${BASE_URL}/projects/status/APPROVED`)
-      .then((response) => response.json())
-      .then((data) => {
-        setProjects(data);
-      })
-      .catch((error) => console.error("Error fetching projects:", error));
-  }, []);
+    if (!tokenLoaded) return; // Ensure token is set before API call
 
+    axiosInstance
+      .get("/projects/status/APPROVED")
+      .then(({ data }) => setProjects(data))
+      .catch((error) => console.error("Error fetching projects:", error));
+  }, [tokenLoaded]); // Only runs when tokenLoaded is true
+
+  // ✅ Filter projects based on search input
   const trimmedSearchTerm = searchTerm.trim().toLowerCase();
-  const filteredProjects = projects.filter((project) => {
-    const title = project.title ? project.title.toLowerCase() : "";
-    const description = project.description
-      ? project.description.toLowerCase()
-      : "";
-    return (
-      title.includes(trimmedSearchTerm) ||
-      description.includes(trimmedSearchTerm)
-    );
-  });
+  const filteredProjects = projects.filter((project) =>
+    [project.title, project.description]
+      .filter(Boolean)
+      .some((text) => text.toLowerCase().includes(trimmedSearchTerm))
+  );
 
   return (
     <div className="homepage-container">
@@ -69,15 +68,10 @@ const HomePage = () => {
             <div key={project.projectId} className="project-card">
               <h3>{project.title}</h3>
               <p>{project.description.split(" ").slice(0, 15).join(" ")}...</p>
-              {/* <p>
-                <strong>Goal:</strong> ${project.goalAmount}
-              </p> */}
               <p>
                 <strong>Deadline:</strong>{" "}
                 {new Date(project.deadline).toLocaleDateString()}
               </p>
-
-              {/* Pass role via Link state */}
               <Link to={`/project/${project.projectId}`} state={{ role }}>
                 <button className="details-btn">View Details</button>
               </Link>

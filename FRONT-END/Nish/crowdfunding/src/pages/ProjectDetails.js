@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { BASE_URL } from "../api/api";
-
+import axiosInstance from "../middleware/axiosInstance";
+import { CircularProgress } from "@mui/material";
 const ProjectDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -25,29 +25,29 @@ const ProjectDetails = () => {
   }, []);
 
   useEffect(() => {
-    // Fetch project, creator, and collected amount concurrently
-    const fetchProjectDetails = fetch(`${BASE_URL}/projects/${id}`).then(
-      (res) => res.json()
-    );
-    const fetchCollectedAmount = fetch(
-      `${BASE_URL}/donations/donation/sum/${id}/project`
-    )
-      .then((res) => res.json())
-      .catch(() => ({ amount: 0 })); // Default to 0 if API fails
+    // Fetch project, creator, and collected amount concurrently using axios
+    const fetchProjectDetails = axiosInstance.get(`/projects/${id}`);
+    const fetchCollectedAmount = axiosInstance
+      .get(`/donations/donation/sum/${id}/project`)
+      .catch(() => ({ data: { amount: 0 } })); // Default to 0 if API fails
 
     Promise.all([fetchProjectDetails, fetchCollectedAmount])
-      .then(([projectData, collectedData]) => {
-        setProject(projectData);
-        setCollectedAmount(collectedData.amount || 0);
-        return fetch(`${BASE_URL}/users/by/id?id=${projectData.userId}`);
+      .then(([projectRes, collectedRes]) => {
+        setProject(projectRes.data);
+        setCollectedAmount(collectedRes.data.amount || 0);
+        return axiosInstance.get(`/users/by/id?id=${projectRes.data.userId}`);
       })
-      .then((res) => res.json())
-      .then((userData) => setCreator(userData.data))
+      .then((userRes) => setCreator(userRes.data.data))
       .catch((error) => console.error("Error fetching data:", error));
   }, [id]);
 
   if (!project || !creator) {
-    return <p>Loading project details...</p>;
+    // return <p>Loading project details...</p>;
+    return (
+      <p>
+        <CircularProgress />{" "}
+      </p>
+    );
   }
 
   return (

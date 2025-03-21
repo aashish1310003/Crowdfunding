@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/Register.css";
+import axiosInstance from "../middleware/axiosInstance";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -21,7 +22,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
+      await axiosInstance.post(
         "https://crowdfunding-production-ede0.up.railway.app/users/create-user",
         formData
       );

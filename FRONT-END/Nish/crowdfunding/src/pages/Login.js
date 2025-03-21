@@ -4,6 +4,7 @@ import axios from "axios";
 import "../styles/Login.css";
 import { BASE_URL } from "../api/api";
 import { jwtDecode } from "jwt-decode"; // Correct import
+import axiosInstance from "../middleware/axiosInstance";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await axios.post(`${BASE_URL}/api/auth/login`, {
+      const response = await axiosInstance.post(`${BASE_URL}/api/auth/login`, {
         email,
         password,
       });

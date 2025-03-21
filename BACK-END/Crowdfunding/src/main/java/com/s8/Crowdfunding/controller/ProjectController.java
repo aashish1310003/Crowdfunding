@@ -98,6 +98,20 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/admin/evaluated")
+    public ResponseEntity<?> getProjectsforAdminEvaluated() {
+        try {
+            List<ProjectResponse> projects = projectService.getProjectForAdminEvaluated().stream()
+                    .map(project -> mapper.map(project, ProjectResponse.class))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(projects);
+        } catch (InvaildStatusException e) {
+            return ResponseEntity.status(409).body(new ApiResponse("invalid status", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(409).body(new ApiResponse("can't get Project", e.getMessage()));
+        }
+    }
+
     @GetMapping("/approved")
     public ResponseEntity<?> getApprovedProjects() {
         try {

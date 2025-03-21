@@ -21,6 +21,8 @@ public interface IProjectService {
 
     List<Project> getProjectForAdmin();
 
+    List<Project> getProjectForAdminEvaluated();
+
     List<Project> getApprovedProjectsn();
 
     List<Project> getProjectsByGoalNotReached();

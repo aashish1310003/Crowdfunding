@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../styles/styles.css";
 import { BASE_URL } from "../api/api";
+import axiosInstance from "../middleware/axiosInstance";
 
 const CreateProject = () => {
   const [project, setProject] = useState({
@@ -26,7 +27,7 @@ const CreateProject = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
+    axiosInstance
       .post(`${BASE_URL}/projects/create`, project) // Corrected URL
       .then(() => navigate("/home"))
       .catch((err) => console.error(err));

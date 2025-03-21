@@ -22,6 +22,8 @@ import PaymentFailure from "./pages/PaymentFailure";
 import UpdateProject from "./components/updateProject";
 import AdminProjects from "./pages/AdminProjects";
 import AdminProjectDetails from "./pages/AdminProjectDetails";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AdminEvaluated from "./pages/AdminEvaluated";
 
 function App() {
   return (
@@ -52,17 +54,33 @@ function MainLayout() {
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/project/:id" element={<ProjectDetails />} />
-        <Route path="/payment/:id" element={<PaymentPage />} />
-        <Route path="/my-projects" element={<MyProjects />} />
-        <Route path="/create-project" element={<CreateProject />} />
-        <Route path="/update/:projectId" element={<UpdateProject />} />
-        <Route path="/payment-success" element={<PaymentSuccess />} />
-        <Route path="/payment-failure" element={<PaymentFailure />} />
-        <Route path="/admin/projects" element={<AdminProjects />} />
-        <Route
-          path="/admin/project-details/:projectId"
-          element={<AdminProjectDetails />}
-        />
+
+        {/* Protected Routes (Require Login) */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/payment/:id" element={<PaymentPage />} />
+          <Route path="/my-projects" element={<MyProjects />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-failure" element={<PaymentFailure />} />
+        </Route>
+
+        <Route element={<ProtectedRoute studentOnly={true} />}>
+          <Route path="/create-project" element={<CreateProject />} />
+          <Route path="/update/:projectId" element={<UpdateProject />} />
+        </Route>
+
+        {/* Admin Routes (Require Admin Role) */}
+        {/* <Route element={<ProtectedRoute adminOnly={true} />}> */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin/evaluate/projects" element={<AdminProjects />} />
+          <Route
+            path="/admin/evaluated/projects"
+            element={<AdminEvaluated />}
+          />
+          <Route
+            path="/admin/project-details/:projectId"
+            element={<AdminProjectDetails />}
+          />
+        </Route>
       </Routes>
     </>
   );

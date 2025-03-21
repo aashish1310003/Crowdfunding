@@ -3,60 +3,45 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axiosInstance from "../middleware/axiosInstance";
 import "../styles/myprojects.css";
-import { CircularProgress } from "@mui/material"; // Import CircularProgress
+import { CircularProgress } from "@mui/material";
 
 const MyProjects = () => {
   const [projects, setProjects] = useState([]);
-  const [selectedStatus, setSelectedStatus] = useState("CREATED");
+  const [selectedStatus, setSelectedStatus] = useState("APPROVED");
   const [userId, setUserId] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Add a loading state
   const navigate = useNavigate();
 
-  // ✅ Handle Token and User Authentication
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        setUserId(decoded.userId); // Update userId
+        setUserId(decoded.userId);
       } catch (error) {
         console.error("Invalid token", error);
-        localStorage.removeItem("token"); // Clear invalid token
-        navigate("/login"); // Redirect to login if token is invalid
       }
-    } else {
-      navigate("/login"); // Redirect if no token is found
     }
-  }, [navigate]);
+  }, []);
 
-  // ✅ Fetch User's Projects
   useEffect(() => {
-    if (!userId) return; // Ensure userId is set before making the API call
+    if (!userId) return;
 
-    setLoading(true);
+    setLoading(true); // Set loading to true before fetching data
     axiosInstance
-      .get("/projects/admin")
+      .get("/projects/admin/evaluated")
       .then(({ data }) => {
-        console.log("Fetched projects:", data); // Debug API response
         setProjects(Array.isArray(data) ? data : []);
       })
-      .catch((error) => {
-        console.error("Error fetching projects:", error);
-        if (error.response?.status === 401) {
-          localStorage.removeItem("token"); // Remove expired token
-          navigate("/login"); // Redirect to login
-        }
-      })
-      .finally(() => setLoading(false));
-  }, [userId, navigate]);
+      .catch((error) => console.error("Error fetching projects:", error))
+      .finally(() => setLoading(false)); // Set loading to false after fetching
+  }, [userId]);
 
-  // ✅ Filter projects by selected status
   const filteredProjects = projects.filter(
     (project) => project.status === selectedStatus
   );
 
-  // ✅ Status options
-  const statuses = ["CREATED", "PENDING"];
+  const statuses = ["APPROVED", "REJECTED"];
 
   return (
     <div className="myprojects-container">
@@ -73,12 +58,12 @@ const MyProjects = () => {
           </button>
         ))}
       </div>
-
-      {/* ✅ Show loading spinner while fetching data */}
       <div className="project-list">
-        {loading ? (
-          <CircularProgress />
-        ) : filteredProjects.length > 0 ? (
+        {loading ? ( // Show loading indicator if data is being fetched
+          <div className="loading-spinner">
+            <CircularProgress />{" "}
+          </div>
+        ) : filteredProjects.length > 0 ? ( // Show projects if data is available
           filteredProjects.map((project) => (
             <div
               key={project.projectId}
@@ -95,6 +80,7 @@ const MyProjects = () => {
             </div>
           ))
         ) : (
+          // Show message if no projects are found
           <p>No {selectedStatus.toLowerCase()} projects found.</p>
         )}
       </div>

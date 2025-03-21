@@ -72,6 +72,13 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
+    public List<Project> getProjectForAdminEvaluated(){
+        List<Project> projects = getProjectsByStatus("APPROVED");
+        projects.addAll(getProjectsByStatus("REJECTED"));
+        return projects;
+    }
+
+    @Override
     public List<Project> getApprovedProjectsn(){
         return getProjectsByStatus("APPROVED");
     }

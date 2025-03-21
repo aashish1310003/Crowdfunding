@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/styles.css";
 import { BASE_URL } from "../api/api";
+import axiosInstance from "../middleware/axiosInstance";
 
 const UpdateProject = () => {
   const { projectId } = useParams();
@@ -10,7 +11,7 @@ const UpdateProject = () => {
   const [project, setProject] = useState(null);
 
   useEffect(() => {
-    axios
+    axiosInstance
       .get(`${BASE_URL}/projects/${projectId}`)
       .then((res) => {
         const projectData = res.data;
@@ -34,7 +35,7 @@ const UpdateProject = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
+    axiosInstance
       .post(`${BASE_URL}/projects/update`, project)
       .then(() => navigate("/"))
       .catch((err) => console.error("Error updating project:", err));
