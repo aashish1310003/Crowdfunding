@@ -32,9 +32,11 @@ The progress of this project is documented weekly. Click the link below to acces
 
 - [Weekly Log - 6 WORKING ON BACKEND)](docs/week6-log.md)
 
-- [Weekly Log - 6 WORKING ON FRONTEND)](docs/week7/)
+- [Weekly Log - 7 WORKING ON FRONTEND)](docs/week7/)
 
 - [Weekly Log - 8 WORKING ON PAYMENT)](docs/week-8.pdf)
+
+- [Weekly Log - 9 WORKING ON ERROR HANDLING)](docs/week-9.pdf)
 
 ---
 
