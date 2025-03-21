@@ -41,27 +41,38 @@ public class UserService implements IUserService {
 
     public Users createUser(UserRequest userDto) throws UserExistsException {
         if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
-            throw new UserExistsException("user already exists with this email !");
+            throw new UserExistsException("User already exists with this email!");
         }
-        int len = userDto.getEmail().length();
-        if (!userDto.getEmail().substring(len - 15).equals("@bitsathy.ac.in")) {
+
+        if (!userDto.getEmail().endsWith("@bitsathy.ac.in")) {
             throw new UserExistsException("Supports only BIT email addresses");
         }
+
         ModelMapper mapper = new ModelMapper();
         Users user = mapper.map(userDto, Users.class);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-        user.setPassword(encodedPassword);
-        int passOut = Integer.parseInt(userDto.getEmail()
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encode only once
+
+        // Extract numeric values from email (if present)
+        String extractedDigits = userDto.getEmail()
                 .chars()
                 .filter(Character::isDigit)
                 .mapToObj(c -> String.valueOf((char) c))
-                .collect(Collectors.joining()));
-        // System.out.println(passOut);
-        user.setRole(Year.now().getValue() % 100 <= (passOut + 4) ? "STUDENT" : "DONOR");
+                .collect(Collectors.joining());
+
+        int passOut = extractedDigits.isEmpty() ? -1 : Integer.parseInt(extractedDigits);
+        System.out.println("Extracted Year: " + passOut);
+
+        // Assign role based on extracted year
+        if (passOut == -1) {
+            user.setRole("DONOR"); // No numbers in email -> Assign DONOR role
+        } else {
+            user.setRole(Year.now().getValue() % 100 <= (passOut + 4) ? "STUDENT" : "DONOR");
+        }
+//        user.setRole("ADMIN");
         return userRepository.save(user);
     }
+
 
     public List<Project> getUserProjectsByStatus(Long userId, String status) {
         getUsersById(userId); // Ensures the user exists, otherwise throws an exception

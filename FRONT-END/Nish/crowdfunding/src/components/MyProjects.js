@@ -75,9 +75,7 @@ const MyProjects = () => {
             </div>
           ))
         ) : (
-          <p>
-            <CircularProgress />{" "}
-          </p>
+          <p>no project found</p>
         )}
       </div>
     </div>
