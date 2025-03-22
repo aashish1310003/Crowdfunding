@@ -37,7 +37,7 @@ const AdminProjectDetails = () => {
       .put(`/projects/${projectId}/status`, { status })
       .then(() => {
         alert(`Project ${status}`);
-        navigate("/admin/projects");
+        navigate("/admin/evaluate/projects");
       })
       .catch((error) => console.error("Error updating project status:", error));
   };
@@ -78,17 +78,20 @@ const AdminProjectDetails = () => {
           height="500px"
           title="Project PDF"></iframe>
       </div>
-
-      <button
-        className="approve-button"
-        onClick={() => handleApproval("APPROVED")}>
-        Approve
-      </button>
-      <button
-        className="reject-button"
-        onClick={() => handleApproval("REJECTED")}>
-        Reject
-      </button>
+      {(project.status === "PENDING" || project.status === "CREATED") && (
+        <>
+          <button
+            className="approve-button"
+            onClick={() => handleApproval("APPROVED")}>
+            Approve
+          </button>
+          <button
+            className="reject-button"
+            onClick={() => handleApproval("REJECTED")}>
+            Reject
+          </button>
+        </>
+      )}
     </div>
   );
 };

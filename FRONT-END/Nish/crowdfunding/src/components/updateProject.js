@@ -37,7 +37,7 @@ const UpdateProject = () => {
     e.preventDefault();
     axiosInstance
       .post(`${BASE_URL}/projects/update`, project)
-      .then(() => navigate("/"))
+      .then(() => navigate("/my-projects"))
       .catch((err) => console.error("Error updating project:", err));
   };
 
