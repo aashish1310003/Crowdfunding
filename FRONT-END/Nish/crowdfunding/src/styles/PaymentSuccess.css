@@ -1,0 +1,107 @@
+/* PaymentSuccess.css - 3D Animations and Visual Effects */
+.success-page {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.success-page h2 {
+  text-align: center;
+  font-size: 28px;
+  color: #333;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  animation: float 3s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.success-page p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.home-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(145deg, #ff9800, #ff5722);
+  color: #fff;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2),
+    -5px -5px 10px rgba(255, 255, 255, 0.2);
+  display: block;
+  margin: 0 auto;
+}
+
+.home-button:hover {
+  background: linear-gradient(145deg, #ff9800, #ff5722);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3),
+    -2px -2px 5px rgba(255, 255, 255, 0.3);
+  transform: translateY(-3px);
+}
+
+.home-button:active {
+  box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.3),
+    inset -5px -5px 10px rgba(255, 255, 255, 0.3);
+  transform: translateY(0);
+}
+
+/* 3D Background Animation */
+body::before,
+body::after {
+  content: "";
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.3),
+    rgba(255, 255, 255, 0)
+  );
+  animation: float 8s infinite ease-in-out;
+  z-index: 1;
+}
+
+body::before {
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+body::after {
+  bottom: 10%;
+  right: 10%;
+  animation-delay: 4s;
+}

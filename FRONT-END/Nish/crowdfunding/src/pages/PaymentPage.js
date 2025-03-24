@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../middleware/axiosInstance";
+import "../styles/PaymentPage.css";
 
 const DonationPage = () => {
   const { id } = useParams();
@@ -63,10 +64,15 @@ const DonationPage = () => {
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           min="1"
+          className="donation-input"
         />
       </label>
-      <button onClick={handlePayment}>Proceed to Payment</button>
-      <button onClick={() => navigate(-1)}>Back</button>
+      <button className="donation-button" onClick={handlePayment}>
+        Proceed to Payment
+      </button>
+      <button className="back-button" onClick={() => navigate(-1)}>
+        Back
+      </button>
     </div>
   );
 };

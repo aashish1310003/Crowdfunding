@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../styles/styles.css";
+import "../styles/CreateProject.css";
 import { BASE_URL } from "../api/api";
 import axiosInstance from "../middleware/axiosInstance";
 
@@ -48,7 +48,8 @@ const CreateProject = () => {
           name="description"
           placeholder="Project Description"
           onChange={handleChange}
-          required></textarea>
+          required
+        ></textarea>
         <input
           type="number"
           name="goalAmount"

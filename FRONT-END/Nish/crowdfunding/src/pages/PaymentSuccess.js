@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { BASE_URL } from "../api/api";
 import axiosInstance from "../middleware/axiosInstance";
+import "../styles/PaymentSuccess.css"; // Import the CSS file
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -47,7 +47,9 @@ const PaymentSuccess = () => {
     <div className="success-page">
       <h2>Payment Successful 🎉</h2>
       <p>Thank you for your donation of ₹{amount}.</p>
-      <button onClick={() => navigate("/home")}>Back to Home</button>
+      <button className="home-button" onClick={() => navigate("/home")}>
+        Back to Home
+      </button>
     </div>
   );
 };
