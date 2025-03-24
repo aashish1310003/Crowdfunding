@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/Register.css";
-import axiosInstance from "../middleware/axiosInstance";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -12,63 +11,106 @@ const Register = () => {
   });
 
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const navigate = useNavigate(); // Store useNavigate at the top
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
-      await axiosInstance.post(
+      await axios.post(
         "https://crowdfunding-production-ede0.up.railway.app/users/create-user",
         formData
       );
-      setMessage("User registered successfully!");
-      navigate("/login"); // Use navigate function instead of calling useNavigate directly
+      setMessage("Registration successful! Redirecting...");
+      setTimeout(() => navigate("/login"), 1500);
     } catch (error) {
-      console.log(error);
-      setMessage("Registration failed!");
+      setMessage(error.response?.data?.message || "Registration failed!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="register-container">
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Register</button>
-      </form>
-      {message && <p className="message">{message}</p>}
+    <div className="register-page">
+      <div className="portal-header">
+        <h1 className="portal-title">Crowdfunding Portal</h1>
+        <p className="portal-subtitle">
+          Empower Innovation • Support Dreams • Build the Future
+        </p>
+      </div>
 
-      <p className="login-link">
-        Already a user? <Link to="/login">Login</Link>
-      </p>
+      <div className="register-container">
+        <div className="register-card">
+          <h2 className="register-title">Join Our Community</h2>
+          <p className="register-subtitle">
+            Create your account to start funding or creating projects
+          </p>
+
+          <form onSubmit={handleSubmit} className="register-form">
+            <div className="form-group">
+              <label htmlFor="name">Full Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your full name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Create a password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? <span className="spinner"></span> : "Create Account"}
+            </button>
+          </form>
+
+          {message && (
+            <p
+              className={`message ${
+                message.includes("failed") ? "error" : "success"
+              }`}
+            >
+              {message}
+            </p>
+          )}
+
+          <p className="login-link">
+            Already have an account? <Link to="/login">Sign In</Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

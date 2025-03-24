@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { FaUserCircle } from "react-icons/fa"; // Import profile icon
+import { UserCircle, Search, Calendar, ArrowRight, Loader } from "lucide-react";
 import Navbar from "../components/Navbar";
-import "../styles/styles.css";
+import "../styles/HomePage.css";
 import axiosInstance from "../middleware/axiosInstance";
 
 const HomePage = () => {
@@ -11,35 +11,39 @@ const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [role, setRole] = useState(null);
   const [userEmail, setUserEmail] = useState("");
-  const [tokenLoaded, setTokenLoaded] = useState(false); // New state
+  const [tokenLoaded, setTokenLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // ✅ Load token and set user info
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        console.log("Decoded Token:", decoded);
-        setRole(decoded.roles); // Ensure this matches your backend response
+        setRole(decoded.roles);
         setUserEmail(decoded.name);
       } catch (error) {
         console.error("Invalid token", error);
       }
     }
-    setTokenLoaded(true); // Mark that token is now processed
+    setTokenLoaded(true);
   }, []);
 
-  // ✅ Fetch projects only after token is loaded
   useEffect(() => {
-    if (!tokenLoaded) return; // Ensure token is set before API call
+    if (!tokenLoaded) return;
 
+    setLoading(true);
     axiosInstance
       .get("/projects/status/APPROVED")
-      .then(({ data }) => setProjects(data))
-      .catch((error) => console.error("Error fetching projects:", error));
-  }, [tokenLoaded]); // Only runs when tokenLoaded is true
+      .then(({ data }) => {
+        setProjects(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching projects:", error);
+        setLoading(false);
+      });
+  }, [tokenLoaded]);
 
-  // ✅ Filter projects based on search input
   const trimmedSearchTerm = searchTerm.trim().toLowerCase();
   const filteredProjects = projects.filter((project) =>
     [project.title, project.description]
@@ -50,35 +54,67 @@ const HomePage = () => {
   return (
     <div className="homepage-container">
       <Navbar role={role} />
-      <div className="profile-container">
-        <FaUserCircle className="profile-icon" size={32} />
-        <p className="user-email">{userEmail}</p>
-      </div>
-      <h1>All Projects</h1>
-      <input
-        type="text"
-        placeholder="Search projects..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="search-bar"
-      />
-      <div className="project-list">
-        {filteredProjects.length > 0 ? (
-          filteredProjects.map((project) => (
-            <div key={project.projectId} className="project-card">
-              <h3>{project.title}</h3>
-              <p>{project.description.split(" ").slice(0, 15).join(" ")}...</p>
-              <p>
-                <strong>Deadline:</strong>{" "}
-                {new Date(project.deadline).toLocaleDateString()}
-              </p>
-              <Link to={`/project/${project.projectId}`} state={{ role }}>
-                <button className="details-btn">View Details</button>
-              </Link>
-            </div>
-          ))
+
+      <div className="content-wrapper">
+        <div className="profile-container">
+          <UserCircle className="profile-icon" />
+          <span className="user-email">{userEmail}</span>
+        </div>
+
+        <div className="search-container">
+          <h1 className="page-title">Discover Projects</h1>
+          <div className="search-wrapper">
+            <Search className="search-icon" />
+            <input
+              type="text"
+              placeholder="Search projects by title or description..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-bar"
+            />
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="loading-state">
+            <Loader className="spinner" />
+            <p>Loading projects...</p>
+          </div>
         ) : (
-          <p>No projects found.</p>
+          <div className="project-list">
+            {filteredProjects.length > 0 ? (
+              filteredProjects.map((project) => (
+                <div key={project.projectId} className="project-card">
+                  <div className="card-content">
+                    <h3 className="project-title">{project.title}</h3>
+                    <p className="project-description">
+                      {project.description.split(" ").slice(0, 15).join(" ")}...
+                    </p>
+                    <div className="project-meta">
+                      <div className="deadline">
+                        <Calendar className="meta-icon" />
+                        <span>
+                          {new Date(project.deadline).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                    <Link
+                      to={`/project/${project.projectId}`}
+                      state={{ role }}
+                      className="view-details"
+                    >
+                      View Details
+                      <ArrowRight className="arrow-icon" />
+                    </Link>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="no-results">
+                <p>No projects found matching your search.</p>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>

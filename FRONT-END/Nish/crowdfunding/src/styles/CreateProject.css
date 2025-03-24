@@ -1,4 +1,4 @@
-/* MyProjects.css - Animated and Visual Effects */
+/* CreateProject.css - Animated and Visual Effects */
 body {
   margin: 0;
   padding: 0;
@@ -12,8 +12,8 @@ body {
   /* overflow-x: hidden; */
 }
 
-.myprojects-container {
-  max-width: 1200px;
+.create-container {
+  max-width: 600px;
   margin: 50px auto;
   padding: 30px;
   background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
@@ -35,8 +35,8 @@ body {
   }
 }
 
-.myprojects-container h1 {
-  font-size: 32px;
+.create-container h2 {
+  font-size: 28px;
   color: #333;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
@@ -54,82 +54,62 @@ body {
   }
 }
 
-.status-buttons {
+.create-form {
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.status-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.status-button:hover {
-  background: linear-gradient(145deg, #ff9800, #ff5722);
-  color: #fff;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  transform: translateY(-3px); /* Lift effect on hover */
-}
-
-.status-button.active {
-  background: linear-gradient(145deg, #ff9800, #ff5722);
-  color: #fff;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.project-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  flex-direction: column;
   gap: 20px;
 }
 
-.project-card {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
-  animation: fadeInUp 0.5s ease-in-out; /* Fade-in animation for cards */
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.project-card:hover {
-  transform: translateY(-5px); /* Lift effect on hover */
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-}
-
-.project-card h3 {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.project-card p {
+.create-form input,
+.create-form textarea {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
   font-size: 16px;
-  color: #555;
-  margin-bottom: 15px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: inset 3px 3px 5px rgba(0, 0, 0, 0.1),
+    inset -3px -3px 5px rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.create-form input:focus,
+.create-form textarea:focus {
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.6);
+  transform: scale(1.02); /* Slight zoom effect on focus */
+}
+
+.create-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.create-form button {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #ff9800, #ff5722);
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2),
+    -5px -5px 10px rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.create-form button:hover {
+  background: linear-gradient(145deg, #ff9800, #ff5722);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3),
+    -2px -2px 5px rgba(255, 255, 255, 0.3);
+  transform: translateY(-3px); /* Lift effect on hover */
+}
+
+.create-form button:active {
+  box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.3),
+    inset -5px -5px 10px rgba(255, 255, 255, 0.3);
+  transform: translateY(0);
 }
 
 /* 3D Background Animation */
