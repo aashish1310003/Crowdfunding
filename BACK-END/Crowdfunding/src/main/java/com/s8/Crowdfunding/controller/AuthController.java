@@ -1,9 +1,14 @@
 package com.s8.Crowdfunding.controller;
 
+import com.s8.Crowdfunding.dto.ApiResponse;
 import com.s8.Crowdfunding.dto.LoginRequest;
 import com.s8.Crowdfunding.model.Users;
 import com.s8.Crowdfunding.repository.UserRepository;
+import com.s8.Crowdfunding.service.OtpService;
 import com.s8.Crowdfunding.webtoken.JwtService;
+
+import java.util.HashMap;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,16 +25,19 @@ public class AuthController {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
+    private final OtpService otpService;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, UserRepository userRepository, UserDetailsService userDetailsService) {
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService,
+            UserRepository userRepository, UserDetailsService userDetailsService, OtpService otpService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.userDetailsService = userDetailsService;
+        this.otpService = otpService;
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         System.out.println("Login API hit with email: " + loginRequest.getEmail());
 
         try {
@@ -38,10 +46,40 @@ public class AuthController {
 
             System.out.println("Token generation getting started: " + authentication.toString());
 
-            return jwtService.generateToken((UserDetails) authentication.getPrincipal());
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+            boolean isAdmin = userDetails.getAuthorities()
+                    .stream()
+                    .anyMatch(auth -> auth.getAuthority().equals("ADMIN"));
+
+            if (!isAdmin) {
+                otpService.generateOtp(loginRequest.getEmail());
+                return ResponseEntity.ok("OTP sent to " + loginRequest.getEmail());
+            }
+
+            HashMap<String, String> token = new HashMap<>();
+            token.put("token", jwtService.generateToken(userDetails));
+
+            return ResponseEntity.ok(token);
         } catch (Exception e) {
             System.out.println("Authentication failed: " + e.getMessage());
-            throw e; // rethrow to see full error response in logs
+            throw e;
+        }
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<?> verifyOpt(@RequestBody LoginRequest loginRequest) {
+        try {
+            String jwtToken = jwtService.generateToken(userDetailsService.loadUserByUsername(loginRequest.getEmail()));
+            if (!otpService.validateOtp(loginRequest.getEmail(), loginRequest.getPassword())) {
+                return ResponseEntity.status(401).body("Invalid OTP");
+            }
+            HashMap<String, String> token = new HashMap<String, String>();
+            token.put("token", jwtToken);
+            return ResponseEntity.ok(token);
+        } catch (Exception e) {
+            System.out.println("Failed to verify OTP: " + e.getMessage());
+            return ResponseEntity.status(400).body(new ApiResponse("Failed to verify OTP", e.getMessage()));
         }
     }
 

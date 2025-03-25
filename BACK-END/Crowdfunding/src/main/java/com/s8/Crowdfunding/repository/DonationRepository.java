@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DonationRepository extends JpaRepository<Donation, Long> {
+public interface DonationRepository extends JpaRepository<Donation, String> {
 
     @Query("SELECT COALESCE(SUM(d.amount), 0) FROM Donation d WHERE d.project.projectId = :id")
     Double sumOfAllDonationsById(@Param("id") Long id);

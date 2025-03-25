@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,7 +25,8 @@ public class ProjectService implements IProjectService {
     private final CommonService commonService;
     private final ModelMapper mapper;
 
-    public ProjectService(ProjectRepository projectRepository, DonationService donationService, @Lazy UserService userService, CommonService commonService, ModelMapper mapper) {
+    public ProjectService(ProjectRepository projectRepository, DonationService donationService,
+            @Lazy UserService userService, CommonService commonService, ModelMapper mapper) {
         this.projectRepository = projectRepository;
         this.donationService = donationService;
         this.userService = userService;
@@ -41,11 +43,10 @@ public class ProjectService implements IProjectService {
     public Project getProjectById(Long id) {
         return projectRepository.findById(id)
                 .orElseThrow(() -> {
-                    System.out.println("❌ Project not found with id: " + id);  // Debugging log
+                    System.out.println("❌ Project not found with id: " + id); // Debugging log
                     return new ResourceNotFoundException("Project not found with id: " + id);
                 });
     }
-
 
     @Override
     public List<Project> getProjectByUser(Long id) {
@@ -65,35 +66,38 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public List<Project> getProjectForAdmin(){
+    public List<Project> getProjectForAdmin() {
         List<Project> projects = getProjectsByStatus("CREATED");
         projects.addAll(getProjectsByStatus("PENDING"));
         return projects;
     }
 
     @Override
-    public List<Project> getProjectForAdminEvaluated(){
+    public List<Project> getProjectForAdminEvaluated() {
         List<Project> projects = getProjectsByStatus("APPROVED");
         projects.addAll(getProjectsByStatus("REJECTED"));
         return projects;
     }
 
     @Override
-    public List<Project> getApprovedProjectsn(){
+    public List<Project> getApprovedProjects() {
         return getProjectsByStatus("APPROVED");
     }
 
     @Override
     public List<Project> getProjectsByGoalNotReached() {
         return projectRepository.findByStatus("APPROVED").stream()
-                .filter(project -> donationService.sumOfAllDonationsById(project.getProjectId()) < project.getGoalAmount())
+                .filter(project -> donationService.sumOfAllDonationsById(project.getProjectId()) < project
+                        .getGoalAmount())
+                .filter(project -> project.getDeadline().before(new Date()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Project> getProjectsByGoalReached() {
         return projectRepository.findByStatus("APPROVED").stream()
-                .filter(project -> donationService.sumOfAllDonationsById(project.getProjectId()) >= project.getGoalAmount())
+                .filter(project -> donationService.sumOfAllDonationsById(project.getProjectId()) >= project
+                        .getGoalAmount())
                 .collect(Collectors.toList());
     }
 
@@ -103,8 +107,8 @@ public class ProjectService implements IProjectService {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Project with id " + id + " not found"));
 
-
-        if ((project.getStatus().equals("CREATED") || project.getStatus().equals("PENDING")) && status.equals("REJECTED")) {
+        if ((project.getStatus().equals("CREATED") || project.getStatus().equals("PENDING"))
+                && status.equals("REJECTED")) {
             project.setAppealCount(project.getAppealCount() + 1);
         }
 
@@ -117,7 +121,8 @@ public class ProjectService implements IProjectService {
         Project currProject = getProjectById(projectRequest.getProjectId());
         if (currProject.getAppealCount() >= 3) {
             throw new AppealLimitExceededException("Appeal count exceeded for this project");
-        }if(currProject.getUser().getUserId() != projectRequest.getUserId()) {
+        }
+        if (currProject.getUser().getUserId() != projectRequest.getUserId()) {
             throw new InvalidUserAccessException("Only project owner can access");
         }
         return Optional.of(currProject)
@@ -135,7 +140,7 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public Project createProject(ProjectRequest projectRequest){
+    public Project createProject(ProjectRequest projectRequest) {
         Project project = mapper.map(projectRequest, Project.class);
         System.out.println(project.getProjectId());
         project.setAppealCount(0);

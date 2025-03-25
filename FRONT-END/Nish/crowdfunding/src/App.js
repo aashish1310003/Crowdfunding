@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import HomePage from "./pages/HomePage";
 import ProjectDetails from "./pages/ProjectDetails";
 import Navbar from "./components/Navbar";
@@ -24,6 +23,7 @@ import AdminProjects from "./pages/AdminProjects";
 import AdminProjectDetails from "./pages/AdminProjectDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminEvaluated from "./pages/AdminEvaluated";
+import AchievedProjects from "./pages/AchievedProjects";
 
 function App() {
   return (
@@ -79,6 +79,10 @@ function MainLayout() {
           <Route
             path="/admin/project-details/:projectId"
             element={<AdminProjectDetails />}
+          />
+          <Route
+            path="/admin/achieve/projects"
+            element={<AchievedProjects />}
           />
         </Route>
       </Routes>
