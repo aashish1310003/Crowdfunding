@@ -63,14 +63,14 @@ function MainLayout() {
           <Route path="/payment-failure" element={<PaymentFailure />} />
         </Route>
 
-        <Route element={<ProtectedRoute studentOnly={true} />}>
+        <Route element={<ProtectedRoute studentOnly />}>
           <Route path="/create-project" element={<CreateProject />} />
           <Route path="/update/:projectId" element={<UpdateProject />} />
         </Route>
 
         {/* Admin Routes (Require Admin Role) */}
         {/* <Route element={<ProtectedRoute adminOnly={true} />}> */}
-        <Route element={<ProtectedRoute />}>
+        <Route element={<ProtectedRoute adminOnly />}>
           <Route path="/admin/evaluate/projects" element={<AdminProjects />} />
           <Route
             path="/admin/evaluated/projects"

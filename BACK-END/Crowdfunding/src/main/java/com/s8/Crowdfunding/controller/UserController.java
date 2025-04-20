@@ -48,7 +48,7 @@ public class UserController {
     public ResponseEntity<?> getProjectByUserAndTarget(@RequestParam("id") Long userId,
             @RequestParam("goal") Boolean goal) {
         try {
-            return ResponseEntity.ok( userService.getUserProjectsByTarget(userId, goal));
+            return ResponseEntity.ok(userService.getUserProjectsByTarget(userId, goal));
         } catch (Exception e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
@@ -71,6 +71,5 @@ public class UserController {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
-
 
 }
